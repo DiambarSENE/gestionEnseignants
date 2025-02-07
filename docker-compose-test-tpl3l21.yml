@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+  db_enseignant:
+    image: mysql:8.3
+    container_name: db_enseignant
+    ports:
+      - '3309:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: sene
+      MYSQL_DATABASE: gestion_enseignant
+      MYSQL_USER: sene
+      MYSQL_PASSWORD: sene
+      TZ: Africa/Dakar
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-psene"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - db-data-enseignant:/var/lib/mysql
+    networks:
+      - network-l3l2i
+
+  gestion-enseignant:
+    image: diambarsene/gestion-enseignant-v1:v1
+    container_name: gestion_enseignant
+    ports:
+      - "8191:8191"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db_l3l2is:3306/gestion_enseignant
+      SPRING_DATASOURCE_USERNAME: sene
+      SPRING_DATASOURCE_PASSWORD: sene
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      - db_enseignant
+    networks:
+      - network-l3l2i
+
+volumes:
+  db-data-enseignant:
+
+networks:
+  network-l3l2i:
+
