@@ -51,7 +51,6 @@ jobs:
 
   deploy:
     name: Déployer sur un VPS
-    needs: build-and-push
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
